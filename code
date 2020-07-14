@@ -1,0 +1,68 @@
+import random
+import smtplib
+
+# connects email to server
+sender_email = "willypoo1998@gmail.com"  # email address that will be sending the emails from
+password = input(str("Please enter your password: "))
+server = smtplib.SMTP('smtp.gmail.com',587)
+server.starttls()
+server.login(sender_email, password)
+print()
+print("Login success")
+
+
+
+class Player:
+    def __init__(self, name, email):
+        self.name = name
+        self.email = email
+    def send_mail(self, your_secret_santa, sender_email):
+        self.your_secret_santa = your_secret_santa
+        self.sender_email = sender_email
+        self.message = "Hi " + self.name + "! Your secret santa is " + self.your_secret_santa
+        print("sending mail to " + self.name)
+        print(self.email)
+        server.sendmail(self.sender_email, self.email, self.message)
+        '''
+        self.your_secret_santa = your_secret_santa
+        self.sender_email = sender_email
+        print("Sending email to " + self.email)
+        print()
+        print("Message: " + "Hi " + self.name + "! Your secret santa is " + self.your_secret_santa)
+        '''
+
+print("Welcome to Secret Santa!")
+print()
+num_players = int(input("How many players are playing? "))
+print()
+
+santa = list()  # generate empty list to store objects
+
+# the range function allows us to iterate for each player
+
+for x in range(num_players):
+    print("Player " + str(x + 1))  # the +1 is to avoid player 0
+    name = input("Name: ")
+    email = input("Email: ")
+    santa.append(Player(name, email))
+
+random.shuffle(santa) # randomizes objects
+jar = list()  # created an empty jar which will hold each player
+
+for obj in santa:
+    jar.append(obj.name)
+
+random.shuffle(jar)
+
+for obj in santa:
+    if obj.name is not jar[0]:
+        obj.send_mail(jar[0], sender_email)
+        jar.remove(jar[0])
+        print()
+    else:
+        obj.send_mail(jar[1], sender_email)
+        jar.remove(jar[1])
+        print()
+    random.shuffle(jar)
+
+print("Done!")
